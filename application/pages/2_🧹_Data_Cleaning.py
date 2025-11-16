@@ -11,12 +11,20 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 # ---------------------------------------------------------------------------------------------
 from components.sidebar import render_sidebar
 from components.display import display_type_based_input, display_function_options
-from utils.preset import DATA_TYPE_OPTIONS
-from utils.summary import info_dtypes, info_sample_rows
+from utils.preset import DATA_TYPE_OPTIONS, FILL_OPTIONS
+from utils.summary import (
+    info_dtypes,
+    info_sample_rows,
+    info_duplicate_rows,
+    info_filter_dataset,
+)
 from utils.manipulation import (
     helper_drop_columns,
     helper_apply_dtype_and_rename,
     helper_create_column,
+    helper_drop_null_rows,
+    helper_fill_null_values,
+    helper_drop_duplicate_rows,
 )
 
 # ---------------------------------------------------------------------------------------------
@@ -59,7 +67,7 @@ if selected_file:
     selected_df = st.session_state.df_dict[selected_file]
 else:
     selected_df = pd.DataFrame()
-# ---------------------------------------------------------------------------------------------
+# -----------------------------------------------------------                ----------------------------------
 
 
 # ---------------------------------------------------------------------------------------------
@@ -96,12 +104,10 @@ if selected_file:
 st.divider()
 # ---------------------------------------------------------------------------------------------
 # Tabs
-tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(
+tab1, tab2, tab3, tab4 = st.tabs(
     [
         "Column Management",
-        "Missing Data Handling",
-        "Transformation",
-        "Reshaping & Aggregation",
+        "Invalid Data Handling",
         "Filtering",
         "Export",
     ]
@@ -112,11 +118,9 @@ tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(
 # ---------------------------------------------------------------------------------------------
 with tab1:
     # Column Operations:
-    st.header("Column Operations:")
-
     # ---------------------------------------------------------------------------------------------
     # Change Data Type:
-    st.subheader("Rename / Change Data Types")
+    st.header("Rename / Change Data Types")
 
     dtype_df = pd.DataFrame(
         [
@@ -154,7 +158,7 @@ with tab1:
 
     # ---------------------------------------------------------------------------------------------
     # Drop Columns:
-    st.subheader("Drop Columns")
+    st.header("Drop Columns")
     st.write("Select the columns you wish to remove")
     col1, col2 = st.columns([0.8, 0.2], vertical_alignment="center")
 
@@ -164,7 +168,7 @@ with tab1:
             options=selected_df.columns,
             label_visibility="collapsed",
             selection_mode="multi",
-            key="column_drop_list",
+            key=f"{selected_df}'s_column_drop_list",
         )
     with col2:
         st.button(
@@ -181,7 +185,7 @@ with tab1:
 
     # ---------------------------------------------------------------------------------------------
     # Reorder Columns:
-    st.subheader("Reorder Columns")
+    st.header("Reorder Columns")
     sorted_columns = sort_items(items=selected_df.columns.to_list())
 
     selected_df = selected_df[sorted_columns]
@@ -194,7 +198,7 @@ with tab1:
 
     # ---------------------------------------------------------------------------------------------
     # Create Column (With Values)
-    st.subheader("Create New Column")
+    st.header("Create New Column")
 
     column_fil_formulas = []
 
@@ -217,7 +221,7 @@ with tab1:
         )
     with col4:
         if new_col_mode == "Same Value":
-            new_col_value = display_type_based_input(new_col_dtype)
+            new_col_value = display_type_based_input(new_col_dtype, "first_use")
             st.session_state.new_col_value = new_col_value
         elif new_col_mode == "Formula":
             new_col_formula = st.selectbox(
@@ -236,53 +240,176 @@ with tab1:
 
     st.divider()
     # ---------------------------------------------------------------------------------------------
-
-
 # ---------------------------------------------------------------------------------------------
 
 
 # ---------------------------------------------------------------------------------------------
+with tab2:
+    # Missing Data Operations
+    # ---------------------------------------------------------------------------------------------
+    # Drop Rows
+    st.header("Drop Rows with NaN")
+    null_rows = selected_df.isnull().any(axis=1).sum()
+    st.info(f"Rows Containing Null Values: **{null_rows}**")
+
+    row_drop_list_by_column = st.pills(
+        label="Drop Rows in Selected Columns",
+        options=selected_df.columns,
+        selection_mode="multi",
+        key=f"row_drop_list_by_{selected_df}'s_column",
+    )
+    if len(row_drop_list_by_column) > 0:
+        col_amount_to_drop = len(row_drop_list_by_column)
+    else:
+        col_amount_to_drop = "All"
+
+    drop_row_button = st.button(
+        label=f"Drop Null from {col_amount_to_drop} Column(s)",
+        on_click=helper_drop_null_rows,
+    )
+
+    if selected_file:
+        selected_df = st.session_state.df_dict[selected_file]
+
+    st.divider()
+    # ---------------------------------------------------------------------------------------------
+
+    # ---------------------------------------------------------------------------------------------
+    # Fill Null Values
+    st.header("Fill NaN")
+    col1, col2 = st.columns([0.6, 0.4])
+
+    with col1:
+        fill_null_list_by_column = st.pills(
+            label="Select Columns to Fill",
+            options=selected_df.columns,
+            selection_mode="single",
+            key=f"fill_null_by_{selected_df}'s_column",
+        )
+    with col2:
+        select_fill_options = st.selectbox(
+            label="Fill Method", options=FILL_OPTIONS, key="fill_method"
+        )
+
+    if select_fill_options == "Custom":
+        col1, col2 = st.columns([0.3, 0.7])
+
+        with col1:
+            data_type = st.selectbox(label="Data Type", options=DATA_TYPE_OPTIONS)
+        with col2:
+            custom_value_fill = display_type_based_input(data_type, "second_use")
+            st.session_state.custom_value_fill = custom_value_fill
+
+    st.button(label="Fill Null Values", on_click=helper_fill_null_values)
+
+    if selected_file:
+        selected_df = st.session_state.df_dict[selected_file]
+
+    st.divider()
+    # ---------------------------------------------------------------------------------------------
+
+    # Duplicate Rows Operations
+    # ---------------------------------------------------------------------------------------------
+    # Remove Duplicate Rows
+    st.header("Remove Duplicate Rows")
+    duplicated_amount, duplicated_rows = info_duplicate_rows(selected_df)
+
+    if duplicated_amount > 0:
+        st.info("Only the Duplicated Row after the first one is shown")
+        st.dataframe(duplicated_rows)
+        st.button(
+            f"Delete {duplicated_amount} Rows",
+            on_click=helper_drop_duplicate_rows,
+            use_container_width=True,
+        )
+    else:
+        st.success("No Duplicate Rows")
+
+    if selected_file:
+        selected_df = st.session_state.df_dict[selected_file]
+    # ---------------------------------------------------------------------------------------------
+    st.divider()
 # ---------------------------------------------------------------------------------------------
 
 
 # ---------------------------------------------------------------------------------------------
+with tab3:
+    # ---------------------------------------------------------------------------------------------
+    st.header("Filter Method")
+    filter_method = st.segmented_control(
+        label="Select the Filter Method:",
+        options=["Comparison", "Index Range"],
+        key="filter_method",
+    )
+
+    if filter_method == "Comparison":
+        col1, col2, col3, col4 = st.columns(4)
+        with col1:
+            column_name = st.selectbox(
+                "Select Column", selected_df.columns, key="filter_column_name"
+            )
+        with col2:
+            comparison_operator = st.selectbox(
+                "Select Operator",
+                ["==", ">", ">=", "<", "<=", "Contains"],
+                key="filter_comparison_operator",
+            )
+        with col3:
+            filter_data_type = st.selectbox("Select DataType", DATA_TYPE_OPTIONS)
+        with col4:
+            filter_value = display_type_based_input(filter_data_type, "third_use")
+            st.session_state.filter_value = filter_value
+
+        st.button("Filter", on_click=info_filter_dataset, use_container_width=True)
+
+    elif filter_method == "Index Range":
+        col1, col2 = st.columns(2)
+        with col1:
+            index_from = st.number_input(
+                label="Index From:",
+                min_value=0,
+                max_value=len(selected_df) - 1,
+                step=1,
+                key="index_from",
+            )
+        with col2:
+            index_until = st.number_input(
+                label="Index Until: (Exclusive)",
+                min_value=0,
+                max_value=len(selected_df),
+                step=1,
+                key="index_until",
+            )
+        if st.button("Filter"):
+            filtered_df = selected_df.iloc[index_from:index_until]
+            st.session_state.filtered_df = filtered_df
+
+    st.divider()
+    st.subheader("Filtered Dataframe")
+    st.dataframe(st.session_state.get("filtered_df"))
+    # ---------------------------------------------------------------------------------------------
 # ---------------------------------------------------------------------------------------------
 
 
 # ---------------------------------------------------------------------------------------------
-# ---------------------------------------------------------------------------------------------
+with tab4:
+    st.header("Export Modified Dataset:")
 
+    col1, col2 = st.columns(2)
+    for name, df in st.session_state.df_dict.items():
 
-# ---------------------------------------------------------------------------------------------
+        with col1:
+            st.text_input(
+                "Download File", value=name, disabled=True, label_visibility="collapsed"
+            )
 
-# ---------------------------------------------------------------------------------------------
-
-
-# ---------------------------------------------------------------------------------------------
-# ---------------------------------------------------------------------------------------------
-
-
-# ---------------------------------------------------------------------------------------------
-# ---------------------------------------------------------------------------------------------
-
-
-# ---------------------------------------------------------------------------------------------
-# ---------------------------------------------------------------------------------------------
-
-
-# ---------------------------------------------------------------------------------------------
-# ---------------------------------------------------------------------------------------------
-
-
-# ---------------------------------------------------------------------------------------------
-# ---------------------------------------------------------------------------------------------
-
-
-# ------------------------------------------------------------
-
-# ---------------------------------------------------------------------------------------------
-# ---------------------------------------------------------------------------------------------
-
-
-# ---------------------------------------------------------------------------------------------
+        with col2:
+            csv_data = df.to_csv(index=False).encode("utf-8")
+            st.download_button(
+                label="Download as CSV",
+                data=csv_data,
+                file_name=f"{name}.csv",
+                mime="text/csv",
+                key=f"download_{name}",
+            )
 # ---------------------------------------------------------------------------------------------
