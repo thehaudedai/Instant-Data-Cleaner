@@ -125,3 +125,10 @@ This project is licensed under the MIT License. See the LICENSE file for details
 ---
 
 <div align="center"> <h2>🚀 Moonshot Hackathon</h2> <a href="https://moonshot.hackclub.com" target="_blank"> <img src="https://hc-cdn.hel1.your-objectstorage.com/s/v3/35ad2be8c916670f3e1ac63c1df04d76a4b337d1_moonshot.png" alt="This project is part of Moonshot --- a 4-day hackathon in Florida visiting Kennedy Space Center and Universal Studios!" style="width: 100%; max-width: 450px;"> </a> <p>Built as part of Hack Club's Moonshot program.</p> </div>
+
+---
+
+## 🛣️ Project Timeline
+
+- ✅ Version 1.0 – Stable: Fully functional cleaning tools
+- 🔜 Version 2.0 – Planned: Redesigned UI, improved workflow, extra cleaning utilities
