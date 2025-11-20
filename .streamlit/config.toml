@@ -1,0 +1,18 @@
+[theme]
+# Brand / Accent Colors
+primaryColor = "#4B9CD3"               # Calm blue accent (buttons, highlights)
+secondaryBackgroundColor = "#1E1F26"   # Smooth dark gray for widgets/containers
+
+# Core Layout Colors
+backgroundColor = "#0D0E12"            # Subtle dark background (not pure black)
+textColor = "#F0F2F6"                  # Soft off-white for comfortable readability
+
+# Typography
+font = "sans serif"
+
+[ui]
+hideTopBar = false
+hideSidebarNav = false
+
+[client]
+showErrorDetails = true

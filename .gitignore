@@ -6,3 +6,6 @@ __pycache__/
 note.txt
 note.md
 .vscode/
+core/
+ui/
+app.py

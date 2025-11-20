@@ -21,3 +21,14 @@ def render_sidebar():
         st.session_state.file_dict = {}
         st.session_state.df_dict = {}
         st.rerun()
+
+    with st.sidebar:
+        st.markdown(
+            """
+        ---
+        ### ⚠️ App Status: Version 1  
+        - This app currently includes **basic data-cleaning features only**.
+
+        > A complete redesign (UI, architecture, and expanded functionality) is planned for future versions.
+        """
+        )

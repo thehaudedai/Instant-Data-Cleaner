@@ -13,12 +13,13 @@ from utils.summary import (
     info_shape,
     info_sample_rows,
 )
+
 from components.sidebar import render_sidebar
 
 # ---------------------------------------------------------------------------------------------
 
 # ---------------------------------------------------------------------------------------------
-st.set_page_config(page_title="Home", page_icon="🏠", layout="wide")
+st.set_page_config(page_title="HOME", page_icon="🏠", layout="wide")
 render_sidebar()  # TODO: Edit Sidebar; No CSV in label, proper formatting.
 
 

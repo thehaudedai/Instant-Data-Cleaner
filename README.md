@@ -1,222 +1,127 @@
-# Instant Data Dashboard (Name WIP)
+# **Instant Data Cleaner**
 
-A Streamlit dashboard that lets users upload datasets, clean and explore data, and generate visualizations without coding.
+### _A simple, fast, code-free tool for cleaning messy datasets._
 
-- Designed to simplify early-stage analysis and allow export of cleaned data and visualization code.
-- Built with Python, pandas, and Streamlit.
+Instant Data Cleaner is a lightweight Streamlit application that helps you clean and prepare datasets without writing code.\
+It focuses entirely on **practical, essential data-cleaning steps** --- the things everyone needs before analysis, visualization, modeling, or sharing data.
 
----
-
-## 🚧 Project Features Roadmap & Implementation Checklist
-
-This is a living checklist of planned features and components grouped by functionality. Use it to track progress and stay focused on the scope.
+This project began as a broader "all-in-one dashboard," but is now intentionally scoped down to a dedicated, easy-to-use **cleaning tool**. A redesigned UI and more refined workflow are planned for future versions.
 
 ---
 
-### ✅ 1. Data Preprocessing
+## 🚀 **Current Status --- Version 1**
 
-#### 📂 Dataset Handling
-
-- [x] Upload CSV / Excel / JSON
-- [x] View raw data (with pagination)
-- [x] View raw data Info
-- [ ] Filter and View Certain Columns
-- [ ] Filter and View Certain Rows via Index or Conditions
-- [ ] Save/load project sessions _(optional)_
-
-#### 🧼 Data Cleaning
-
-- [x] Rename columns
-- [x] Remove columns
-- [x] Reorder columns
-- [ ] Drop duplicates
-- [-] Remove rows
-  - [ ] Remove Rows by Filtering
-  - [x] Remove Rows by Indexing
-- [x] Change data types (int, float, string, datetime, categorical)
-- [-] Handle missing values:
-  - [x] Drop rows/columns with NaNs
-  - [x] Fill NaNs with:
-    - [x] Mean
-    - [x] Median
-    - [x] Mode
-    - [x] Forward Fill
-    - [x] Backward Fill
-    - [x] Custom value
-- [x] Edit/Replace specific cells/values (via data editor)
-- [x] Convert strings to datetime considering the string is preformatted in a datetime format
-- [ ] Convert categorical to numerical:
-  - [ ] Label Encoding
-  - [ ] One-Hot Encoding
-- [ ] Normalize / Standardize columns
-- [ ] Transpose data
-- [ ] Pivot / Unpivot (Melt) data
-- [ ] Filter rows (based on conditions)
-- [x] Sort data by columns
-- [-] Create new columns
-  - [ ] Using Formula
-  - [x] Using Same Values for all rows in the new column
-- [ ] Group by operations with aggregation (sum, mean, count, etc.)
-- [ ] Merge/Join datasets _(optional for v2)_
-- [ ] Download cleaned data
+V1 includes all the fundamental cleaning features needed to tidy most datasets.\
+It's stable, functional, and meant to be a solid foundation before the larger V2 redesign.
 
 ---
 
-### 📊 2. Data Analysis
+# ✨ **Features (V1)**
 
-#### 📋 Summary Statistics
+## 📥 **Input & Exploration**
 
-- [ ] Dataset overview:
-  - [ ] Number of rows/columns
-  - [ ] Missing value count
-  - [ ] Data types
-- [ ] Column-level statistics:
-  - [ ] Mean, Median, Mode
-  - [ ] Min, Max
-  - [ ] Std Deviation
-  - [ ] Unique values
-  - [ ] Value counts (for categorical)
-- [ ] Correlation matrix (with heatmap)
-- [ ] Covariance matrix
-- [ ] Skewness / Kurtosis _(optional)_
-- [ ] Outlier detection (IQR / Z-score)
-- [ ] Feature-target relationship summaries _(for supervised ML)_
+- Upload CSV or Excel files _(JSON planned for V2)_
+
+- Preview raw data with pagination
+
+- View dataset structure (columns, data types, row counts)
 
 ---
 
-### 📈 3. Data Visualization
+## 🧽 **Data Cleaning Tools**
 
-#### 📊 Chart Types
+### **Column Operations**
 
-- [ ] Bar Chart
-- [ ] Line Chart
-- [ ] Pie Chart
-- [ ] Scatter Plot
-- [ ] Histogram
-- [ ] Box Plot
-- [ ] Area Chart
-- [ ] Heatmap
-- [ ] Violin Plot _(optional)_
-- [ ] Pair Plot _(optional)_
+- Rename columns
 
-#### 🧩 Customization Options
+- Remove columns
 
-- [ ] Select X and Y axis
-- [ ] Group by / Hue support
-- [ ] Filters on visualized data
-- [ ] Chart titles and axis labels
-- [ ] Toggle grid, legends, tooltips
-- [ ] Color customization
-- [ ] Export chart as image
-- [ ] Export chart as Python code (Matplotlib / Seaborn / Plotly)
+- Reorder columns
 
-#### 📁 Dashboard _(Optional for v2)_
+### **Row Operations**
 
-- [ ] Combine visuals into a dashboard layout
-- [ ] Save/load dashboards
+- Remove rows by index
 
----
+- Filter rows using conditions
 
-### 🤖 4. Model Training (Sklearn)
+- Drop duplicate rows
 
-#### 📄 Data Selection
+### **Missing Values**
 
-- [ ] Choose target column
-- [ ] Select features
-- [ ] Train/Test split (with slider)
-- [ ] Cross-validation setup _(optional)_
+- Drop rows/columns with missing data
 
-#### 📚 Model Selection
+- Fill missing values with:
 
-**Classification:**
+  - Mean
 
-- [ ] Logistic Regression
-- [ ] Random Forest
-- [ ] Decision Tree
-- [ ] KNN
-- [ ] SVM
+  - Median
 
-**Regression:**
+  - Mode
 
-- [ ] Linear Regression
-- [ ] Ridge / Lasso
-- [ ] Random Forest Regressor
-- [ ] SVR
+  - Forward fill
 
-- [ ] Clustering (KMeans) _(optional for v2)_
+  - Backward fill
 
-#### ⚙️ Model Configuration
+  - Custom values
 
-- [ ] Hyperparameter tuning (via sliders/dropdowns)
-- [ ] Random seed config
-- [ ] Feature scaling:
-  - [ ] StandardScaler
-  - [ ] MinMaxScaler
+### **Data Types & Values**
 
-#### 📈 Model Evaluation
+- Change data types
 
-**Classification:**
+- Convert strings to datetime (when already formatted as such)
 
-- [ ] Accuracy
-- [ ] Precision, Recall, F1-score
-- [ ] Confusion matrix
-- [ ] ROC Curve
+- Edit or replace specific cells (via interactive editor)
 
-**Regression:**
+### **Create Columns**
 
-- [ ] MAE, MSE, RMSE
-- [ ] R² Score
-- [ ] Prediction vs Actual plot
-
-#### 📦 Model Export
-
-- [ ] Download trained model (Pickle / Joblib)
-- [ ] Export training code _(optional)_
-
-#### 🧪 Prediction Interface
-
-- [ ] Single row prediction (via form input)
-- [ ] Batch prediction (CSV upload)
+- Add new columns with a constant value\
+  _(More options planned for V2)_
 
 ---
 
-### 🚀 Optional / Advanced Features (Future Roadmap)
+## 📤 **Export**
 
-- [ ] User accounts and saved sessions
-- [ ] Upload from cloud (Google Drive, Dropbox)
-- [ ] AutoML (TPOT / AutoSklearn)
-- [ ] NLP module (tokenization, stemming, etc.)
-- [ ] Time series tools (decomposition, lag features)
-- [ ] Collaborative mode (real-time editing)
+- Download the cleaned dataset in your chosen format (Only CSV for now)
 
 ---
 
-### 🧭 Suggested UI Navigation
+# 🛣️ **Roadmap**
 
-- **Upload** → **Clean** → **Analyze** → **Visualize** → **Model**
+Instant Data Cleaner will stay focused on **cleaning**, but the workflow, interface, and tools will continue to expand.
 
-Use sidebar navigation with collapsible panels and modal windows for advanced operations.
+Planned improvements:
+
+### **V1 → V2 Goals**
+
+- Fully redesigned UI
+
+- Cleaner step-by-step workflow
+
+- Improved sidebar navigation
+
+- More column creation tools
+
+- Additional date/time utilities
+
+- Better error handling & highlighting
+
+- Performance improvements for large files
+
+Again --- this project is intentionally _not_ adding visualization or modeling features.\
+The mission is to stay focused and great at one thing: **cleaning data**.
 
 ---
 
-### 💡 Contributing
+# 🤝 **Contributing**
 
-This is currently a personal project, but contributions and feedback are welcome once the MVP is released.
-
----
-
-### 📄 License
-
-To be added.
+This is a personal project, but suggestions and feedback are always welcome.
 
 ---
 
-<div align="center">
-  <h1>MoonShot</h1>
-  <a href="https://moonshot.hackclub.com" target="_blank">
-    <img src="https://hc-cdn.hel1.your-objectstorage.com/s/v3/35ad2be8c916670f3e1ac63c1df04d76a4b337d1_moonshot.png" 
-         alt="This project is part of Moonshot, a 4-day hackathon in Florida visiting Kennedy Space Center and Universal Studios!" 
-         style="width: 100%;">
-  </a>
-    <h2>By HackClub</h2>
-</div>
+# 📄 **License**
+
+This project is licensed under the MIT License. See the LICENSE file for details.
+
+---
+
+<div align="center"> <h2>🚀 Moonshot Hackathon</h2> <a href="https://moonshot.hackclub.com" target="_blank"> <img src="https://hc-cdn.hel1.your-objectstorage.com/s/v3/35ad2be8c916670f3e1ac63c1df04d76a4b337d1_moonshot.png" alt="This project is part of Moonshot --- a 4-day hackathon in Florida visiting Kennedy Space Center and Universal Studios!" style="width: 100%; max-width: 450px;"> </a> <p>Built as part of Hack Club's Moonshot program.</p> </div>
